@@ -7,7 +7,6 @@ import {
     provideRtkDesignSystem,
 } from '@cloudflare/realtimekit-react-ui';
 import { useRealtimeKitMeeting, useRealtimeKitSelector } from '@cloudflare/realtimekit-react';
-import clsx from 'clsx';
 import { useEffect } from 'react';
 import Draggable from 'react-draggable';
 
@@ -20,14 +19,7 @@ export function FaceTimeGrid() {
             {participants.size === 0 && (
                 <p className="text-2xl text-white">People haven't joined yet.</p>
             )}
-            {participants.size === 1 && (
-                <RtkParticipantTile
-                    participant={participants.toArray()[0]}
-                    meeting={meeting}
-                    className="w-full h-full"
-                />
-            )}
-            {participants.size > 1 && (
+            {participants.size > 0 && (
                 <RtkSimpleGrid
                     participants={participants.toArray()}
                     meeting={meeting}
@@ -43,21 +35,23 @@ export function FaceTimePip() {
 
     return (
         <Draggable bounds="parent">
-            <RtkParticipantTile
-                participant={meeting.self}
-                meeting={meeting}
-                key={meeting.self.id}
-                className="z-10 absolute bottom-4 right-4 sm:bottom-4 shadow-black shadow-2xl aspect-square w-52 h-auto cursor-move duration-0"
-            >
-                <RtkAvatar participant={meeting.self} size="md" />
-                <RtkNameTag participant={meeting.self} size="md">
-                    <RtkAudioVisualizer
-                        participant={meeting.self}
-                        size="md"
-                        slot="start"
-                    />
-                </RtkNameTag>
-            </RtkParticipantTile>
+            <div className="pointer-events-auto absolute bottom-4 right-4">
+                <RtkParticipantTile
+                    participant={meeting.self}
+                    meeting={meeting}
+                    key={meeting.self.id}
+                    className="shadow-black shadow-2xl aspect-square w-52 h-auto cursor-move duration-0"
+                >
+                    <RtkAvatar participant={meeting.self} size="md" />
+                    <RtkNameTag participant={meeting.self} size="md">
+                        <RtkAudioVisualizer
+                            participant={meeting.self}
+                            size="md"
+                            slot="start"
+                        />
+                    </RtkNameTag>
+                </RtkParticipantTile>
+            </div>
         </Draggable>
     );
 }
